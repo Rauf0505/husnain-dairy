@@ -1,0 +1,98 @@
+.announcement-ticker {
+  display: block;
+  overflow: hidden;
+  color: var(--announcement-ticker-foreground);
+  background: var(--announcement-ticker-background);
+}
+
+.announcement-ticker__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.announcement-ticker__track {
+  display: flex;
+  width: max-content;
+  visibility: hidden;
+}
+
+.announcement-ticker.is-ready .announcement-ticker__track {
+  visibility: visible;
+  animation: announcement-ticker-scroll var(--announcement-ticker-duration, 30s) linear infinite;
+  will-change: transform;
+}
+
+.announcement-ticker__group {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-width: 100vw;
+  width: max-content;
+}
+
+.announcement-ticker__messages {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-around;
+  gap: clamp(3rem, 6vw, 8rem);
+  width: max-content;
+  padding: 0 2.4rem;
+}
+
+.announcement-ticker__item {
+  flex: 0 0 auto;
+  padding: 0.55rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.announcement-ticker__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.announcement-ticker__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.announcement-ticker__link:focus-visible {
+  outline: 0.2rem solid currentColor;
+  outline-offset: 0.25rem;
+}
+
+.announcement-ticker:hover .announcement-ticker__track,
+.announcement-ticker:focus-within .announcement-ticker__track {
+  animation-play-state: paused;
+}
+
+@keyframes announcement-ticker-scroll {
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-ticker.is-ready .announcement-ticker__track {
+    animation: none;
+    transform: none;
+  }
+
+  .announcement-ticker__group:not(:first-child) {
+    display: none;
+  }
+
+  .announcement-ticker__messages {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+  }
+
+  .announcement-ticker__item[data-ticker-message-clone] {
+    display: none;
+  }
+}

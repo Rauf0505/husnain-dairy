@@ -1,6 +1,26 @@
 {{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
+<style>
+  #shopify-section-{{ section.id }} .utility-bar {
+    min-height: 3.2rem;
+  }
+
+  #shopify-section-{{ section.id }} .announcement-bar__message {
+    padding: 0.3rem 0;
+    font-size: 1.15rem;
+  }
+
+  #shopify-section-{{ section.id }} .announcement-bar .slider-button {
+    min-width: 3.2rem;
+    height: 3rem;
+  }
+
+  #shopify-section-{{ section.id }} .announcement-bar-slider--no-arrows .slider-button {
+    display: none;
+  }
+</style>
+
 {%- liquid
   assign social_icons = true
   if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -25,7 +45,7 @@
     {%- if section.settings.show_social and social_icons -%}
       {%- render 'social-icons' -%}
     {%- endif -%}
-    {%- if section.blocks.size == 1 -%}
+    {%- if section.blocks.size == 1 and section.settings.show_arrows == false -%}
       <div
         class="announcement-bar{% if section.settings.show_social %} announcement-bar--one-announcement{% endif %}"
         role="region"
@@ -50,14 +70,14 @@
           {%- endif -%}
         {%- endif -%}
       </div>
-    {%- elsif section.blocks.size > 1 -%}
+    {%- elsif section.blocks.size > 1 or section.blocks.size == 1 and section.settings.show_arrows -%}
       <slideshow-component
         class="announcement-bar"
         role="region"
         aria-roledescription="{{ 'sections.announcements.carousel' | t }}"
         aria-label="{{ 'sections.announcements.announcement_bar' | t }}"
       >
-        <div class="announcement-bar-slider slider-buttons">
+        <div class="announcement-bar-slider slider-buttons{% unless section.settings.show_arrows %} announcement-bar-slider--no-arrows{% endunless %}">
           <button
             type="button"
             class="slider-button slider-button--prev"
@@ -187,6 +207,12 @@
       "label": "t:sections.announcement-bar.settings.change_slides_speed.label",
       "default": 5
     },    
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
