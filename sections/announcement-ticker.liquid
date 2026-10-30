@@ -3,6 +3,8 @@
 
 <announcement-ticker
   class="announcement-ticker"
+  {{ section.shopify_attributes }}
+  data-design-mode="{{ request.design_mode }}"
   style="--announcement-ticker-background: {{ section.settings.background_color }}; --announcement-ticker-foreground: {{ section.settings.text_color }}; --announcement-ticker-duration: {{ section.settings.speed }}s;"
   role="region"
   aria-label="Announcements"
@@ -12,14 +14,16 @@
       <div class="announcement-ticker__group" data-ticker-group>
         <div class="announcement-ticker__messages">
           {%- for block in section.blocks -%}
-            {%- if block.settings.text != blank -%}
-              <div class="announcement-ticker__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.text != blank or request.design_mode -%}
+              <div class="announcement-ticker__item{% if block.settings.text == blank %} announcement-ticker__item--empty{% endif %}" {{ block.shopify_attributes }}>
                 {%- if block.settings.link != blank -%}
                   <a class="announcement-ticker__link" href="{{ block.settings.link }}">
                     {{ block.settings.text | escape }}
                   </a>
-                {%- else -%}
+                {%- elsif block.settings.text != blank -%}
                   <span>{{ block.settings.text | escape }}</span>
+                {%- else -%}
+                  <span class="announcement-ticker__placeholder">Enter announcement text</span>
                 {%- endif -%}
               </div>
             {%- endif -%}
@@ -32,7 +36,7 @@
 
 {% schema %}
 {
-  "name": "Announcement ticker",
+  "name": "Scrolling ticker",
   "max_blocks": 12,
   "class": "announcement-ticker-section",
   "enabled_on": {
@@ -40,6 +44,10 @@
     "templates": ["index"]
   },
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add, edit, or reorder announcement messages using the blocks below. Each ticker has its own messages, colors, and speed."
+    },
     { "type": "color", "id": "background_color", "label": "Background color", "default": "#5D250F" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
     {
@@ -65,7 +73,7 @@
   ],
   "presets": [
     {
-      "name": "Announcement ticker",
+      "name": "Scrolling ticker",
       "blocks": [{ "type": "announcement" }, { "type": "announcement" }]
     }
   ]

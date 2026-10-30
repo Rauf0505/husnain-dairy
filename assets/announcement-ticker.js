@@ -8,6 +8,11 @@
       this.messages = this.sourceGroup?.querySelector('.announcement-ticker__messages');
       if (!this.track || !this.sourceGroup || !this.messages) return;
 
+      if (this.dataset.designMode === 'true') {
+        this.classList.add('is-editor');
+        return;
+      }
+
       this.buildTrack();
       this.resizeObserver = new ResizeObserver(() => this.fillMessageRow());
       this.resizeObserver.observe(this);
